@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khảo Sát Ý Kiến Khách Hàng - Customer Survey</title>
+    <style>
+        /* Reset & Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: #eef2f5;
+            color: #333;
+            padding: 20px 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container Card - Wufoo Style */
+        .survey-card {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 720px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-top: 6px solid #206095;
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        .survey-header {
+            padding: 30px 35px 20px 35px;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .survey-header h1 {
+            font-size: 24px;
+            color: #1a3b5d;
+            margin-bottom: 8px;
+        }
+
+        .survey-header p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Form Body */
+        .survey-body {
+            padding: 25px 35px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label.field-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #e74c3c;
+            margin-left: 3px;
+        }
+
+        .field-desc {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 6px;
+        }
+
+        /* Input Controls */
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #333;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #206095;
+            box-shadow: 0 0 5px rgba(32, 96, 149, 0.2);
+        }
+
+        .row-2 {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row-2 .col {
+            flex: 1;
+        }
+
+        /* Radio & Checkbox Groups */
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .radio-option, .checkbox-option {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            cursor: pointer;
+            color: #444;
+        }
+
+        .radio-option input, .checkbox-option input {
+            margin-right: 10px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        /* Rating Matrix Table */
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .matrix-table th, .matrix-table td {
+            border: 1px solid #e1e8ed;
+            padding: 10px 8px;
+            text-align: center;
+        }
+
+        .matrix-table th {
+            background-color: #f8fafc;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .matrix-table td.row-label {
+            text-align: left;
+            font-weight: 500;
+            background-color: #ffffff;
+            width: 35%;
+        }
+
+        .matrix-table tr:nth-child(even) td {
+            background-color: #f9fbfd;
+        }
+
+        .matrix-table tr:hover td {
+            background-color: #f0f4f8;
+        }
+
+        .matrix-table input[type="radio"] {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* NPS (Net Promoter Score 0-10) Scale */
+        .nps-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 4px;
+            margin-top: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .nps-box {
+            flex: 1;
+            text-align: center;
+            min-width: 32px;
+        }
+
+        .nps-box input {
+            display: none;
+        }
+
+        .nps-box label {
+            display: block;
+            padding: 10px 0;
+            border: 1px solid #d1d8dd;
+            border-radius: 4px;
+            background-color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            color: #444;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nps-box input:checked + label {
+            background-color: #206095;
+            color: #ffffff;
+            border-color: #206095;
+        }
+
+        .nps-box label:hover {
+            border-color: #206095;
+            color: #206095;
+        }
+
+        .nps-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 4px;
+        }
+
+        /* Footer & Submit Button */
+        .survey-footer {
+            padding: 20px 35px 30px 35px;
+            border-top: 1px solid #e1e8ed;
+            background-color: #fafbfc;
+        }
+
+        .submit-btn {
+            background-color: #206095;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .submit-btn:hover {
+            background-color: #184b75;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Success Message Overlay */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-message h2 {
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            color: #555;
+            font-size: 15px;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 600px) {
+            .survey-card {
+                border-radius: 0;
+            }
+            .survey-header, .survey-body, .survey-footer {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .row-2 {
+                flex-direction: column;
+                gap: 0;
+            }
+            .matrix-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="survey-card">
+        <!-- Header -->
+        <div class="survey-header">
+            <h1>Bảng Khảo Sát Ý Kiến Khách Hàng</h1>
+            <p>Cảm ơn quý khách đã tin tưởng sử dụng dịch vụ của chúng tôi. Vui lòng dành chút thời gian hoàn thành khảo sát dưới đây để giúp chúng tôi nâng cao chất lượng dịch vụ tốt hơn.</p>
+        </div>
+
+        <!-- Form Content -->
+        <form id="customerSurveyForm">
+            <div class="survey-body">
+
+                <!-- Thông tin cá nhân -->
+                <div class="form-group row-2">
+                    <div class="col">
+                        <label class="field-label" for="fullName">Họ và tên <span class="required">*</span></label>
+                        <input type="text" id="fullName" name="fullName" required placeholder="Nguyễn Văn A">
+                    </div>
+                    <div class="col">
+                        <label class="field-label" for="email">Địa chỉ Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" required placeholder="example@email.com">
+                    </div>
+                </div>
+
+                <div class="form-group row-2">
+                    <div class="col">
+                        <label class="field-label" for="phone">Số điện thoại</label>
+                        <input type="tel" id="phone" name="phone" placeholder="0901234567">
+                    </div>
+                    <div class="col">
+                        <label class="field-label" for="usageFrequency">Tần suất sử dụng dịch vụ</label>
+                        <select id="usageFrequency" name="usageFrequency">
+                            <option value="">-- Chọn tần suất --</option>
+                            <option value="first_time">Lần đầu tiên</option>
+                            <option value="weekly">Hàng tuần</option>
+                            <option value="monthly">Hàng tháng</option>
+                            <option value="rarely">Thỉnh thoảng</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px dashed #e1e8ed; margin: 25px 0;">
+
+                <!-- Đánh giá tổng quan -->
+                <div class="form-group">
+                    <label class="field-label">Mức độ hài lòng tổng thể của quý khách? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="overallSatisfaction" value="very_satisfied" required>
+                            Rất hài lòng
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="overallSatisfaction" value="satisfied">
+                            Hài lòng
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="overallSatisfaction" value="neutral">
+                            Bình thường / Trung lập
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="overallSatisfaction" value="unsatisfied">
+                            Không hài lòng
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="overallSatisfaction" value="very_unsatisfied">
+                            Rất không hài lòng
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Bảng đánh giá chi tiết (Rating Matrix) -->
+                <div class="form-group">
+                    <label class="field-label">Đánh giá chi tiết từng tiêu chí: <span class="required">*</span></label>
+                    <table class="matrix-table">
+                        <thead>
+                            <tr>
+                                <th>Tiêu chí</th>
+                                <th>Rất kém</th>
+                                <th>Kém</th>
+                                <th>Đạt</th>
+                                <th>Tốt</th>
+                                <th>Rất tốt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="row-label">Chất lượng sản phẩm / dịch vụ</td>
+                                <td><input type="radio" name="quality" value="1" required></td>
+                                <td><input type="radio" name="quality" value="2"></td>
+                                <td><input type="radio" name="quality" value="3"></td>
+                                <td><input type="radio" name="quality" value="4"></td>
+                                <td><input type="radio" name="quality" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="row-label">Thái độ phục vụ của nhân viên</td>
+                                <td><input type="radio" name="service" value="1" required></td>
+                                <td><input type="radio" name="service" value="2"></td>
+                                <td><input type="radio" name="service" value="3"></td>
+                                <td><input type="radio" name="service" value="4"></td>
+                                <td><input type="radio" name="service" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="row-label">Thời gian phản hồi / Xử lý</td>
+                                <td><input type="radio" name="speed" value="1" required></td>
+                                <td><input type="radio" name="speed" value="2"></td>
+                                <td><input type="radio" name="speed" value="3"></td>
+                                <td><input type="radio" name="speed" value="4"></td>
+                                <td><input type="radio" name="speed" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="row-label">Giá cả so với giá trị mang lại</td>
+                                <td><input type="radio" name="value" value="1" required></td>
+                                <td><input type="radio" name="value" value="2"></td>
+                                <td><input type="radio" name="value" value="3"></td>
+                                <td><input type="radio" name="value" value="4"></td>
+                                <td><input type="radio" name="value" value="5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Thước đo NPS (0-10) -->
+                <div class="form-group">
+                    <label class="field-label">
+                        Khả năng bạn sẽ giới thiệu dịch vụ của chúng tôi cho bạn bè hoặc đồng nghiệp? (0: Rất không sẵn sàng - 10: Rất sẵn sàng)
+                    </label>
+                    <div class="nps-container">
+                        <!-- Tạo chuỗi button 0-10 -->
+                        <script>
+                            for(let i = 0; i <= 10; i++) {
+                                document.write(`
+                                    <div class="nps-box">
+                                        <input type="radio" id="nps_${i}" name="nps" value="${i}">
+                                        <label for="nps_${i}">${i}</label>
+                                    </div>
+                                `);
+                            }
+                        </script>
+                    </div>
+                    <div class="nps-labels">
+                        <span>0 - Hoàn toàn không</span>
+                        <span>10 - Tuyệt đối sẵn sàng</span>
+                    </div>
+                </div>
+
+                <!-- Góp ý mở -->
+                <div class="form-group">
+                    <label class="field-label" for="comments">Ý kiến đóng góp khác hoặc điểm chúng tôi cần cải thiện:</label>
+                    <textarea id="comments" name="comments" rows="4" placeholder="Vui lòng chia sẻ thêm ý kiến của bạn..."></textarea>
+                </div>
+
+            </div>
+
+            <!-- Footer & Submit -->
+            <div class="survey-footer">
+                <button type="submit" class="submit-btn">Gửi Khảo Sát</button>
+            </div>
+        </form>
+
+        <!-- Thông báo hoàn thành -->
+        <div id="successMessage" class="success-message">
+            <h2>✓ Cảm ơn bạn!</h2>
+            <p>Ý kiến phản hồi của bạn đã được ghi nhận thành công.</p>
+        </div>
+    </div>
+
+    <!-- JavaScript Xử Lý Form -->
+    <script>
+        document.getElementById('customerSurveyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('customerSurveyForm').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
